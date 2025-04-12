@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Price Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background: linear-gradient(135deg, #1e1e2f, #2b2b3c);
+            color: #f0f0f0;
+        }
+        label {
+            display: block;
+            margin: 0.5rem 0 0.2rem;
+        }
+        input, select {
+            padding: 0.4rem;
+            width: 300px;
+            margin-bottom: 1rem;
+            background-color: #3a3a4f;
+            color: #fff;
+            border: 1px solid #555;
+        }
+        button {
+            padding: 0.6rem 1rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flight Price Prediction</h1>
+    <form method="POST" action="/predictdata" onsubmit="return validateForm()">
+        <div id="error-container" class="error-message"></div>
+
+        <label for="airline">Airline:</label>
+        <select name="airline" id="airline" required>
+            <option disabled selected value="">Select Airline</option>
+            <option>Air Asia</option>
+            <option>Air India</option>
+            <option>GoAir</option>
+            <option>IndiGo</option>
+            <option>Jet Airways</option>
+            <option>Jet Airways Business</option>
+            <option>Multiple carriers</option>
+            <option>Multiple carriers Premium economy</option>
+            <option>SpiceJet</option>
+            <option>Trujet</option>
+            <option>Vistara</option>
+            <option>Vistara Premium economy</option>
+        </select>
+
+        <label for="date">Date of Journey:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="source">Source:</label>
+        <select name="source" id="source" required>
+            <option disabled selected value="">Select Source</option>
+            <option>Banglore</option>
+            <option>Chennai</option>
+            <option>Delhi</option>
+            <option>Kolkata</option>
+            <option>Mumbai</option>
+        </select>
+
+        <label for="destination">Destination:</label>
+        <select name="destination" id="destination" required>
+            <option disabled selected value="">Select Destination</option>
+            <option>Banglore</option>
+            <option>Cochin</option>
+            <option>Delhi</option>
+            <option>Hyderabad</option>
+            <option>Kolkata</option>
+            <option>New Delhi</option>
+        </select>
+
+        <label for="dep_time">Departure Time:</label>
+        <input type="time" id="dep_time" name="dep_time" required>
+
+        <label for="arrival_time">Arrival Time:</label>
+        <input type="time" id="arrival_time" name="arrival_time" required>
+
+        <label for="duration">Duration (e.g. 2h 30m):</label>
+        <input type="text" id="duration" name="duration" required>
+
+        <label for="stops">Total Stops:</label>
+        <select name="stops" id="stops" required>
+            <option disabled selected value="">Select Stops</option>
+            <option>non-stop</option>
+            <option>1 stop</option>
+            <option>2 stops</option>
+            <option>3 stops</option>
+            <option>4 stops</option>
+        </select>
+
+        <label for="add_info">Additional Info:</label>
+        <select name="add_info" id="add_info" required>
+            <option disabled selected value="">Select Additional Info</option>
+            <option>1 Long layover</option>
+            <option>1 Short layover</option>
+            <option>2 Long layover</option>
+            <option>Business class</option>
+            <option>Change airports</option>
+            <option>In-flight meal not included</option>
+            <option>No Info</option>
+            <option>No check-in baggage included</option>
+            <option>No info</option>
+            <option>Red-eye flight</option>
+        </select>
+
+        <br>
+        <button type="submit">Predict Price</button>
+    </form>
+
+    {% if results %}
+        <h2>Predicted Flight Price: ${{ '%.2f'|format(results) }}</h2>
+    {% endif %}
+
+    <script>
+        function validateForm() {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = ''; // Clear previous errors
+            let isValid = true;
+            const selects = document.querySelectorAll('select[required]');
+            const inputs = document.querySelectorAll('input[required]');
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    errorContainer.innerHTML = 'Please fill in all required fields.';
+                    isValid = false;
+                    return false; // Exit the loop early
+                }
+            });
+
+            if (!isValid) return false;
+
+            selects.forEach(select => {
+                if (select.value === "") {
+                    errorContainer.innerHTML = 'Please select all the options.';
+                    isValid = false;
+                    return false; // Exit the loop early
+                }
+            });
+
+            return isValid;
+        }
+    </script>
+</body>
+</html>
